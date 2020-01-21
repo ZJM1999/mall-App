@@ -21,12 +21,14 @@ export default {
       currentIndex:0
     }
   },
+  
   components:{
     NavBar
   },
   methods:{
     itemClick(index){
       this.currentIndex = index
+      this.$emit('detailClick',index)
     },
     getBack(){
       this.$router.back()

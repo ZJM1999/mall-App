@@ -1,7 +1,7 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
     
-    <img :src="item.show.img"  v-on:load="imgLoad">
+    <img :src="imgShow"  v-on:load="imgLoad">
     <div class="text">
     <p>{{item.title}}</p>
     <span class="price">{{item.price}}</span>
@@ -21,6 +21,11 @@ export default {
       default(){
         return {}
       }
+    }
+  },
+  computed:{
+    imgShow(){
+      return this.item.image || this.item.show.img
     }
   },
   methods:{
