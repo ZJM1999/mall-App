@@ -1,6 +1,6 @@
 <template>
   <div id="detail">
-    <children-detail class="c-detail" @detailClick="detailClick"></children-detail>
+    <children-detail class="c-detail" @detailClick="detailClick" ref="nav"></children-detail>
     <better-scroll class="content" ref="scroll" @getScrollPosition="contentScroll" :position="3">
     <detail-swiper :topimg="topimage"></detail-swiper>
     <detail-title :details="details"></detail-title>
@@ -41,6 +41,7 @@ export default {
       commentInfo:{},
       recommend:[],
       scrollIndex:[],
+      currentIndex:0
     }
   },
   components:{
@@ -101,6 +102,15 @@ export default {
       })
     },
     contentScroll(position){
+      for(let i = 0; i<this.scrollIndex.length; i++){
+        const positionY = -position.y
+        if(this.currentIndex!==i && ((i < this.scrollIndex.length-1 && positionY > this.scrollIndex[i] && positionY < this.scrollIndex[i+1]) || (i === this.scrollIndex.length-1 && positionY > this.scrollIndex[i]))){
+          this.currentIndex = i
+          // console.log(i)
+          this.$refs.nav.currentIndex = this.currentIndex
+
+        }
+      }
     }
   }
 }
