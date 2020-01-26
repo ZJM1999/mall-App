@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
     <children-detail class="c-detail" @detailClick="detailClick" ref="nav"></children-detail>
-    <better-scroll class="content" ref="scroll" @getScrollPosition="contentScroll" :position="3">
+    <better-scroll class="content" ref="bsscroll" @getScrollPosition="contentScroll" :position="3">
     <detail-swiper :topimg="topimage"></detail-swiper>
     <detail-title :details="details"></detail-title>
     <shop-info :ShopInfo="ShopInfo"></shop-info>
@@ -10,6 +10,8 @@
     <detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
     <goods-list :goods="recommend" ref="list"></goods-list>  
     </better-scroll>
+    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
+    <backTop @click.native='topClick' v-show="isScroll"></backTop>
   </div>
 </template>
 
@@ -24,6 +26,8 @@ import detailDescribe from './childrendetail/detailDescribe'
 import detailParams from './childrendetail/detailParams'
 import DetailCommentInfo from './childrendetail/detailCommentInfo'
 import goodsList from '@/components/tabbar/goods/goodsList'
+import detailBottomBar from './childrendetail/detailBottomBar'
+import {backMixin} from '@/common/mixin'
 
 
 
@@ -41,9 +45,12 @@ export default {
       commentInfo:{},
       recommend:[],
       scrollIndex:[],
-      currentIndex:0
+      currentIndex:0,
     }
   },
+
+  mixins:[backMixin],
+
   components:{
     childrenDetail,
     detailSwiper,
@@ -53,7 +60,8 @@ export default {
     detailDescribe,
     detailParams,
     DetailCommentInfo,
-    goodsList
+    goodsList,
+    detailBottomBar
   },
   created(){
     this.iid = this.$route.params.iid
@@ -89,7 +97,7 @@ export default {
   methods:{
     detailClick(index){
       
-      this.$refs.scroll.topClick(0,-this.scrollIndex[index],500)
+      this.$refs.bsscroll.topClick(0,-this.scrollIndex[index],500)
     },
     describeImgLoad(){
       this.$nextTick(()=>{
@@ -104,19 +112,35 @@ export default {
     contentScroll(position){
       for(let i = 0; i<this.scrollIndex.length; i++){
         const positionY = -position.y
-        if(this.currentIndex!==i && ((i < this.scrollIndex.length-1 && positionY > this.scrollIndex[i] && positionY < this.scrollIndex[i+1]) || (i === this.scrollIndex.length-1 && positionY > this.scrollIndex[i]))){
+        if(this.currentIndex!==i && ((i < this.scrollIndex.length-1 && positionY >= this.scrollIndex[i] && positionY < this.scrollIndex[i+1]) || (i === this.scrollIndex.length-1 && positionY >= this.scrollIndex[i]))){
           this.currentIndex = i
           // console.log(i)
           this.$refs.nav.currentIndex = this.currentIndex
 
         }
       }
+      this.isScroll=(-position.y) > 1000
+
+    },
+    addToCart(){
+      const product = {}
+      product.images = this.topimage[0];
+      product.title = this.details.title;
+      product.desc = this.details.desc;
+      product.nowPrice = this.details.nowPrice;
+      product.iid = this.iid;
+      this.$store.dispatch('addCart',product).then(value=>{
+        console.log(value)
+      })
     }
   }
 }
 </script>
 
 <style>
+  .content{
+    height: calc(100% - 44px - 49px);
+  }
   #detail{
     position: relative;
     z-index: 9;
@@ -128,7 +152,5 @@ export default {
     z-index: 9;
     background-color: #fff;
   }
-  .content{
-    height: calc(100% - 44px);
-  }
+  
 </style>

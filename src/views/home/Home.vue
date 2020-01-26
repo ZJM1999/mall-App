@@ -34,6 +34,8 @@ import goodList from '@/components/tabbar/goods/goodsList'
 import backTop from '@/components/tabbar/backTop/backTop'
 //网络请求
 import { getHomeMultiData , getHomeShoppingData} from '@/network/home'
+//mixin导入
+import {backMixin} from '@/common/mixin'
 export default {
   data(){
     return{
@@ -46,12 +48,12 @@ export default {
       },
       tab:['pop','new','sell'],
       index:0,
-      isScroll:false,
       tabOffsetTop:0,
       isOverOffsetTop:false,
       scrollY:0
     }
   },
+  mixins:[backMixin],
   computed:{
     showTab(){
       return this.goods[this.tab[this.index]].list
@@ -69,6 +71,7 @@ export default {
   activated(){
     // console.log('活跃')
     this.$refs.bsscroll.topClick(0,this.scrollY,0)
+    this.debounce(this.$refs.bsscroll.imgagesLoadRefresh,500)()
   },
   deactivated(){
     this.scrollY=this.$refs.bsscroll.scroll.y
@@ -116,10 +119,7 @@ export default {
       this.$refs.tab.currentIndex=index
       
     },
-    topClick(){
-      this.$refs.bsscroll.topClick(0,0)
-      // console.log(this.$refs)
-    },
+    
     getScrollPosition(position){
       // console.log(position)
       this.isScroll=(-position.y) > 1000

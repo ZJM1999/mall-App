@@ -20,6 +20,7 @@ export class MoreDetail {
     this.nowPrice = itemInfo.lowNowPrice
     this.lowPrice = itemInfo.lowPrice
     this.color = itemInfo.discountBgColor
+    this.desc = itemInfo.desc
     this.columns1 = columns[0]
     this.columns2 = columns[1]
     this.columns3 = services[0].name
