@@ -10,6 +10,7 @@ export const backMixin = {
       this.$refs.bsscroll.topClick(0,0,500)
       // console.log('++')
     }
+    
   },
   components:{
     backTop
