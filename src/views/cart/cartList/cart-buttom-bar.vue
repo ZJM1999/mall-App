@@ -7,7 +7,7 @@
     <div class="all-price">
       <span>总价:{{allPrice}}</span>
     </div>
-    <div class="compute-price">
+    <div class="compute-price" @click="goCompute">
       <span>去结算 ({{milk}})</span>
     </div>
   </div>
@@ -43,6 +43,9 @@ export default {
         // console.log('1')
         this.$store.state.cartList.forEach(item=>item.isCheck = false)
       }
+    },
+    goCompute(){
+      if(!this.$store.state.cartList.length) this.$toast.show('请添加商品')
     }
   }
 }

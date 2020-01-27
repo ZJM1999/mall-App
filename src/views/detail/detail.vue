@@ -129,8 +129,9 @@ export default {
       product.desc = this.details.desc;
       product.nowPrice = this.details.nowPrice;
       product.iid = this.iid;
-      this.$store.dispatch('addCart',product).then(value=>{
-        console.log(value)
+      this.$store.dispatch('addCart',product).then(res=>{
+        // console.log(this.$toast)
+        this.$toast.show(res, 2000)
       })
     }
   }
